@@ -2217,6 +2217,7 @@ extern const struct verbs_device_ops verbs_provider_hfi1verbs;
 extern const struct verbs_device_ops verbs_provider_hns;
 extern const struct verbs_device_ops verbs_provider_ipathverbs;
 extern const struct verbs_device_ops verbs_provider_irdma;
+extern const struct verbs_device_ops verbs_provider_mana;
 extern const struct verbs_device_ops verbs_provider_mlx4;
 extern const struct verbs_device_ops verbs_provider_mlx5;
 extern const struct verbs_device_ops verbs_provider_mthca;
