@@ -54,6 +54,7 @@ struct mana_context {
 	struct verbs_context ibv_ctx;
 	struct manadv_ctx_allocators extern_alloc;
 	void *db_page;
+	uint32_t phy_max_mtu;
 };
 
 struct mana_rwq_ind_table {

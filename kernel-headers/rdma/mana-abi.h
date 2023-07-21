@@ -63,4 +63,9 @@ struct mana_ib_create_qp_rss_resp {
 	struct rss_resp_entry entries[64];
 };
 
+struct mana_query_device_resp {
+	__u32 phy_max_mtu;
+	__u32 reserved;
+};
+
 #endif

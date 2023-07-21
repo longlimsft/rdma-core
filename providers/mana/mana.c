@@ -28,6 +28,9 @@ DECLARE_DRV_CMD(mana_alloc_pd, IB_USER_VERBS_CMD_ALLOC_PD, empty, empty);
 DECLARE_DRV_CMD(mana_create_cq, IB_USER_VERBS_CMD_CREATE_CQ, mana_ib_create_cq,
 		empty);
 
+DECLARE_DRV_CMD(mana_query_device_ex, IB_USER_VERBS_EX_CMD_QUERY_DEVICE,
+		empty, mana_query_device_resp);
+
 static const struct verbs_match_ent hca_table[] = {
 	VERBS_DRIVER_ID(RDMA_DRIVER_MANA),
 	{},
@@ -42,17 +45,24 @@ int mana_query_device_ex(struct ibv_context *context,
 			 const struct ibv_query_device_ex_input *input,
 			 struct ibv_device_attr_ex *attr, size_t attr_size)
 {
-	struct ib_uverbs_ex_query_device_resp resp;
+	struct mana_context *ctx = to_mctx(context);
+	struct mana_query_device_resp *drv_resp;
+	struct mana_query_device_ex_resp resp;
 	size_t resp_size = sizeof(resp);
 	int ret;
 
-	ret = ibv_cmd_query_device_any(context, input, attr, attr_size, &resp,
-				       &resp_size);
+	ret = ibv_cmd_query_device_any(context, input, attr, attr_size,
+				       &resp.ibv_resp, &resp_size);
 
 	verbs_debug(verbs_get_ctx(context),
 		    "device attr max_qp %d max_qp_wr %d max_cqe %d\n",
 		    attr->orig_attr.max_qp, attr->orig_attr.max_qp_wr,
 		    attr->orig_attr.max_cqe);
+
+	drv_resp = &resp.drv_payload;
+	ctx->phy_max_mtu = drv_resp->phy_max_mtu;
+
+	printf("%s: ctx->phy_max_mtu=%d\n", __func__, ctx->phy_max_mtu);
 
 	return ret;
 }
